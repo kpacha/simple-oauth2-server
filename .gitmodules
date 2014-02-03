@@ -1,0 +1,9 @@
+[submodule "provision/modules/apt"]
+	path = provision/modules/apt
+	url = https://github.com/puppetlabs/puppetlabs-apt.git
+[submodule "provision/modules/mysql"]
+	path = provision/modules/mysql
+	url = https://github.com/puppetlabs/puppetlabs-mysql.git
+[submodule "provision/modules/stdlib"]
+	path = provision/modules/stdlib
+	url = https://github.com/puppetlabs/puppetlabs-stdlib.git

@@ -1,0 +1,12 @@
+{
+    "name": "kpacha/oauth2-server-php",
+    "authors": [
+        {
+            "name": "Kpacha",
+            "email": "kpacha666@gmail.com"
+        }
+    ],
+    "require": {
+        "bshaffer/oauth2-server-php": "dev-develop"
+    }
+}
