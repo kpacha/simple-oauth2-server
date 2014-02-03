@@ -1,7 +1,7 @@
 simple-oauth2-server
 ====
 
-Simple OAut2 
+Simple demo of an OAuth2 Server 
 
 #Requirements
 
