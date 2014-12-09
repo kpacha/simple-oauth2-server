@@ -1,0 +1,8 @@
+---
+:yaml:
+  :datadir: '/vagrant/hiera'
+:hierarchy:
+  - default
+  - "%{clientcert}"
+  - "%{environment}"
+  - "common"
