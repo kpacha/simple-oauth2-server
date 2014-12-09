@@ -194,4 +194,3 @@ Client2 tries to consume an unauthorized resource
 
 	{"error":"insufficient_scope","error_description":"The request requires higher privileges than provided by the access token"}
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/kpacha/simple-oauth2-server/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
