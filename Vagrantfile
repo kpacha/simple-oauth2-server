@@ -1,17 +1,22 @@
-Vagrant.configure("1") do |config|
-	config.vm.box = "precise32"
-	config.vm.forward_port 80, 3000
-	config.vm.forward_port 3306, 33060
-	config.vm.provision :puppet do |puppet|
-		puppet.manifests_path = "provision/manifests"
-		puppet.module_path = "provision/modules"
-		puppet.manifest_file = "init.pp"
-	end
-end
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
 
-Vagrant.configure("2") do |config|
-	config.vm.synced_folder "./", "/vagrant", id: "vagrant-root",
-	    owner: "vagrant",
-	    group: "www-data",
-	    mount_options: ["dmode=775,fmode=664"]
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "puppetlabs/trusty32"
+  config.vm.box_url = "https://vagrantcloud.com/puppetlabs/boxes/ubuntu-14.04-32-puppet/versions/1/providers/virtualbox.box"
+  config.vm.network :forwarded_port, guest: 80, host: 3000
+  config.vm.network :forwarded_port, guest: 8080, host: 3030
+
+  config.vm.synced_folder "./", "/vagrant", id: "vagrant-root"
+
+  config.vm.provision :shell, :path => "shell/librarian-puppet.sh"
+
+  config.vm.provision :puppet do |puppet|
+    puppet.manifests_path = "puppet/manifests"
+    puppet.manifest_file  = "site.pp"
+    puppet.hiera_config_path = "hiera.yaml"
+    puppet.options = "--verbose --environment development"
+  end
 end
