@@ -1,0 +1,6 @@
+forge "https://forgeapi.puppetlabs.com"
+
+mod "maxchk-varnish"
+mod "jfryman-nginx"
+mod "nodes-php"
+mod "puppetlabs-mysql"
