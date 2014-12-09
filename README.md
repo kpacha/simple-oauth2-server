@@ -1,13 +1,12 @@
 simple-oauth2-server
 ====
 
-Simple demo of an OAuth2 Server 
+Simple demo of an OAuth2 Server based on the oauth2-server-php project
 
 #Requirements
 
 * git
-* vagrant 1.1+
-* puppet
+* vagrant 1.4
 
 #Install
 
@@ -15,41 +14,43 @@ Clone the repo
 
 	$ git clone https://github.com/kpacha/simple-oauth2-server.git
 
-Install the php dependencies
-
-	$ cd simple-oauth2-server/src
-	$ curl -sS https://getcomposer.org/installer | php
-	$ php composer.phar install
-
-Init the project submodules
-
-	$ cd ..
-	$ git submodule init
-	$ git submodule update
-
 Start the engine!
 
 	$ vagrant up
 
-And your simple-oauth2-server will be waiting for you at `http://localhost:3000/oauth2-server-php/public`.
+Install the php dependencies
 
-Also, there are some extras:
+	$ vagrant ssh
+    $ cd /vagrant/src/simple-oauth2-server
+	$ curl -sS https://getcomposer.org/installer | php
+	$ php composer.phar install
 
-* phpinfo is published at `http://localhost:3000/phpinfo.php`
-* phpmyadmin is installed at `http://localhost:3000/phpmyadmin/` (with the credentials defined at `provision/manifests/classes/mysql.pp`)
+And your simple-oauth2-server will be waiting for you at `http://localhost:3000/`.
 
 #Usage
 
 The demo data has 2 users with different scopes:
 
-* Client1: client_id: testclient  | client_secret: testpass | scope: basic, api1, api2
-* Client2: client_id: testclient2 | client_secret: testpass | scope: basic, api3
+User | Client ID | Client Secret | Scope
+-----|-----------|---------------|------
+Client1 | testclient | testpass | basic, api1, api2
+Client2 | testclient2 | testpass | basic, api3
+
+Also, this toy exposes several interesting endpoints
+
+File | Function
+-----|-----------
+token.php | Authentication endpoint: creates a token after checking the received credentials
+checktoken.php | Validation endpoint: validates a token and returns its params
+api1.php | Resource endpoint: simple endpoint for the scope 'api1'
+api2.php | Resource endpoint: simple endpoint for the scope 'api2'
+api3.php | Resource endpoint: simple endpoint for the scope 'api3'
 
 ##Client1 
 
 Client1 requires a token with unauthorized scope
 
-	$ curl -u testclient:testpass http://localhost:3000/oauth2-server-php/public/token.php -d 'grant_type=client_credentials&scope=basic api1 api3' -i
+	$ curl -u testclient:testpass http://localhost:3000/token.php -d 'grant_type=client_credentials&scope=basic api1 api3' -i
 	HTTP/1.1 400 Bad Request
 	Date: Sun, 02 Feb 2014 23:07:12 GMT
 	Server: Apache/2.2.22 (Ubuntu)
@@ -63,7 +64,7 @@ Client1 requires a token with unauthorized scope
 
 Client1 requires a token with limited scope
 
-	$ curl -u testclient:testpass http://localhost:3000/oauth2-server-php/public/token.php -d 'grant_type=client_credentials&scope=basic api1' -iHTTP/1.1 200 OK
+	$ curl -u testclient:testpass http://localhost:3000/token.php -d 'grant_type=client_credentials&scope=basic api1' -iHTTP/1.1 200 OK
 	Date: Sun, 02 Feb 2014 23:08:20 GMT
 	Server: Apache/2.2.22 (Ubuntu)
 	X-Powered-By: PHP/5.3.10-1ubuntu3.9
@@ -76,7 +77,7 @@ Client1 requires a token with limited scope
 
 and he consumes it
 
-	$ curl http://localhost:3000/oauth2-server-php/public/api1.php -d 'access_token=f1193a0c343c2467f0763bb1542744357d41d78b' -iHTTP/1.1 200 OK
+	$ curl http://localhost:3000/api1.php -d 'access_token=f1193a0c343c2467f0763bb1542744357d41d78b' -iHTTP/1.1 200 OK
 	Date: Sun, 02 Feb 2014 23:09:19 GMT
 	Server: Apache/2.2.22 (Ubuntu)
 	X-Powered-By: PHP/5.3.10-1ubuntu3.9
@@ -88,7 +89,7 @@ and he consumes it
 
 but when he requires a resource out from the scope of its token...
 
-	$ curl http://localhost:3000/oauth2-server-php/public/api2.php -d 'access_token=f1193a0c343c2467f0763bb1542744357d41d78b' -i
+	$ curl http://localhost:3000/api2.php -d 'access_token=f1193a0c343c2467f0763bb1542744357d41d78b' -i
 	HTTP/1.1 401 Authorization Required
 	Date: Sun, 02 Feb 2014 23:10:08 GMT
 	Server: Apache/2.2.22 (Ubuntu)
@@ -102,7 +103,7 @@ but when he requires a resource out from the scope of its token...
 
 so client1 requires a token for all its scopes
 
-	$ curl -u testclient:testpass http://localhost:3000/oauth2-server-php/public/token.php -d 'grant_type=client_credentials&scope=basic api1 api2' -i
+	$ curl -u testclient:testpass http://localhost:3000/token.php -d 'grant_type=client_credentials&scope=basic api1 api2' -i
 	HTTP/1.1 200 OK
 	Date: Sun, 02 Feb 2014 23:11:05 GMT
 	Server: Apache/2.2.22 (Ubuntu)
@@ -116,7 +117,7 @@ so client1 requires a token for all its scopes
 
 and now he's able to acces all its resources
 
-	$ curl http://localhost:3000/oauth2-server-php/public/api2.php -d 'access_token=e572c9f6ec7782d479007944c1a983578d63404e' -iHTTP/1.1 200 OK
+	$ curl http://localhost:3000/api2.php -d 'access_token=e572c9f6ec7782d479007944c1a983578d63404e' -iHTTP/1.1 200 OK
 	Date: Sun, 02 Feb 2014 23:11:39 GMT
 	Server: Apache/2.2.22 (Ubuntu)
 	X-Powered-By: PHP/5.3.10-1ubuntu3.9
@@ -126,7 +127,7 @@ and now he's able to acces all its resources
 
 	{"success":true,"message":"You accessed the API 2!"}
 
-	$ curl http://localhost:3000/oauth2-server-php/public/api1.php -d 'access_token=e572c9f6ec7782d479007944c1a983578d63404e' -i
+	$ curl http://localhost:3000/api1.php -d 'access_token=e572c9f6ec7782d479007944c1a983578d63404e' -i
 	HTTP/1.1 200 OK
 	Date: Sun, 02 Feb 2014 23:11:48 GMT
 	Server: Apache/2.2.22 (Ubuntu)
@@ -141,7 +142,7 @@ and now he's able to acces all its resources
 
 Client2 requires a token
 
-	$ curl -u testclient2:testpass http://localhost:3000/oauth2-server-php/public/token.php -d 'grant_type=client_credentials&scope=basic api3' -i
+	$ curl -u testclient2:testpass http://localhost:3000/token.php -d 'grant_type=client_credentials&scope=basic api3' -i
 	HTTP/1.1 200 OK
 	Date: Sun, 02 Feb 2014 23:02:35 GMT
 	Server: Apache/2.2.22 (Ubuntu)
@@ -155,7 +156,7 @@ Client2 requires a token
 
 Client2 requires a token with unauthorized scope
 
-	$ curl -u testclient2:testpass http://localhost:3000/oauth2-server-php/public/token.php -d 'grant_type=client_credentials&scope=basic api1 api3' -i
+	$ curl -u testclient2:testpass http://localhost:3000/token.php -d 'grant_type=client_credentials&scope=basic api1 api3' -i
 	HTTP/1.1 400 Bad Request
 	Date: Sun, 02 Feb 2014 23:03:36 GMT
 	Server: Apache/2.2.22 (Ubuntu)
@@ -169,7 +170,7 @@ Client2 requires a token with unauthorized scope
 
 Client2 consumes its valid token on authorized resource
 
-	$ curl http://localhost:3000/oauth2-server-php/public/api3.php -d 'access_token=33726cf35644c6185af8614f4de8a04dd90e32b8' -iHTTP/1.1 200 OK
+	$ curl http://localhost:3000/api3.php -d 'access_token=33726cf35644c6185af8614f4de8a04dd90e32b8' -iHTTP/1.1 200 OK
 	Date: Sun, 02 Feb 2014 23:04:50 GMT
 	Server: Apache/2.2.22 (Ubuntu)
 	X-Powered-By: PHP/5.3.10-1ubuntu3.9
@@ -181,7 +182,7 @@ Client2 consumes its valid token on authorized resource
 
 Client2 tries to consume an unauthorized resource
 
-	$ curl http://localhost:3000/oauth2-server-php/public/api1.php -d 'access_token=33726cf35644c6185af8614f4de8a04dd90e32b8' -i
+	$ curl http://localhost:3000/api1.php -d 'access_token=33726cf35644c6185af8614f4de8a04dd90e32b8' -i
 	HTTP/1.1 401 Authorization Required
 	Date: Sun, 02 Feb 2014 23:05:48 GMT
 	Server: Apache/2.2.22 (Ubuntu)
