@@ -3,8 +3,8 @@
 // include our OAuth2 Server object
 require_once __DIR__.'/../src/server.php';
 $request = OAuth2\Request::createFromGlobals();
-
 $response = new OAuth2\Response();
+
 $tokenData = $server->getAccessTokenData($request, $response);
 $response->setParameters(array(
     'access_token' => $tokenData['access_token'],
