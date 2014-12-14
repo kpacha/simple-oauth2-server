@@ -46,6 +46,8 @@ api1.php | Resource endpoint: simple endpoint for the scope 'api1'
 api2.php | Resource endpoint: simple endpoint for the scope 'api2'
 api3.php | Resource endpoint: simple endpoint for the scope 'api3'
 
+So you can use the included resource endpoint and/or use as many Remote Resource Services as you want.
+ 
 ##Client1 
 
 Client1 requires a token with unauthorized scope
@@ -247,7 +249,11 @@ Client2 tries to consume an unauthorized resource
 
 	{"error":"insufficient_scope","error_description":"The request requires higher privileges than provided by the access token"}
 
-A remote Resource Service tries to validate a received acces_token and it's not valid
+##Remote Resource Service
+
+_This section shows you the interaction between your Remote Resource Services and the checktoken endpoint of the simple-oauth2-server. Your service should extract the token from the received request and use it to call the simple-oauth2-server._
+
+A remote Resource Service tries to validate a received token and it's not valid
 
 	$ curl -i http://localhost:3000/checktoken.php -d 'access_token=f47566c92f2d589ed351ea11ab3f9864b2197b12'
 	HTTP/1.1 401 Unauthorized
@@ -270,7 +276,7 @@ A remote Resource Service tries to validate a received acces_token and it's not 
 
 	{"access_token":null,"user_id":null,"client_id":null,"scope":null,"expires":null}
 
-A remote Resource Service tries to validate a received acces_token and it's valid
+A remote Resource Service tries to validate a received token and it's valid
 
 	$ curl -i http://localhost:3000/checktoken.php -d 'access_token=f47566c92f2d589ed351ea11ab3f9864b2197b18'
 	HTTP/1.1 200 OK
@@ -292,7 +298,7 @@ A remote Resource Service tries to validate a received acces_token and it's vali
 
 	{"access_token":"f47566c92f2d589ed351ea11ab3f9864b2197b18","user_id":null,"client_id":"testclient2","scope":"basic api3","expires":1418576208}
 
-A remote Resource Service tries to validate a received acces_token enabling cache
+A remote Resource Service tries to validate a received token enabling cache
 
 	$ curl -i 'http://localhost:3000/checktoken.php?access_token=f47566c92f2d589ed351ea11ab3f9864b2197b18'
 	HTTP/1.1 200 OK
