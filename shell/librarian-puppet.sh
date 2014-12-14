@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# this script is based on https://github.com/purple52/librarian-puppet-vagrant/blob/master/shell/librarian-puppet.sh
+
 PATH=$PATH:/usr/local/bin/
 
 # Directory in which librarian-puppet should manage its modules directory
@@ -37,5 +39,5 @@ if [ ! -d "$PUPPET_DIR" ]; then
 fi
 cp /vagrant/puppet/Puppetfile $PUPPET_DIR
 
-cd $PUPPET_DIR && librarian-puppet install --verbose
+cd $PUPPET_DIR && librarian-puppet install --verbose --no-use-v1-api
 
