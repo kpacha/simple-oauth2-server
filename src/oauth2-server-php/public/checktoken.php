@@ -5,14 +5,7 @@ require_once __DIR__.'/../src/server.php';
 $request = OAuth2\Request::createFromGlobals();
 
 $response = new OAuth2\Response();
-$scopeRequired = 'api1'; // this resource requires "apiX" scope
-// Handle a request for an OAuth2.0 Access Token and send the response to the client
-if (!$server->verifyResourceRequest($request, $response, $scopeRequired)) {
-    $response->send();
-    die;
-}
-
-$tokenData = $server->getAccessTokenData($request, $response, $scopeRequired);
+$tokenData = $server->getAccessTokenData($request, $response);
 $response->setParameters(array(
     'access_token' => $tokenData['access_token'],
     'user_id' => $tokenData['user_id'],
