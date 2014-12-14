@@ -1,28 +1,30 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
     ],
-    "hash": "b92fd0117f80bae9191ee7c2570b577d",
+    "hash": "acda53e63ad6767d4c0c61c11a5e9373",
     "packages": [
         {
             "name": "bshaffer/oauth2-server-php",
-            "version": "dev-develop",
+            "version": "v1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bshaffer/oauth2-server-php.git",
-                "reference": "651337268bd2bdacec1e63a53f9ab244a487891e"
+                "reference": "74fcc75e47614c1417c750e907a44567d9ceee1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bshaffer/oauth2-server-php/zipball/651337268bd2bdacec1e63a53f9ab244a487891e",
-                "reference": "651337268bd2bdacec1e63a53f9ab244a487891e",
+                "url": "https://api.github.com/repos/bshaffer/oauth2-server-php/zipball/74fcc75e47614c1417c750e907a44567d9ceee1f",
+                "reference": "74fcc75e47614c1417c750e907a44567d9ceee1f",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.9"
             },
             "suggest": {
+                "aws/aws-sdk-php": "Required to use the DynamoDB storage engine",
                 "predis/predis": "Required to use the Redis storage engine",
                 "thobbs/phpcassa": "Required to use the Cassandra storage engine"
             },
@@ -50,23 +52,14 @@
                 "oauth",
                 "oauth2"
             ],
-            "time": "2014-02-02 01:39:46"
+            "time": "2014-08-28 02:13:42"
         }
     ],
-    "packages-dev": [
-
-    ],
-    "aliases": [
-
-    ],
+    "packages-dev": [],
+    "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "bshaffer/oauth2-server-php": 20
-    },
-    "platform": [
-
-    ],
-    "platform-dev": [
-
-    ]
+    "stability-flags": [],
+    "prefer-stable": false,
+    "platform": [],
+    "platform-dev": []
 }

@@ -7,6 +7,6 @@
         }
     ],
     "require": {
-        "bshaffer/oauth2-server-php": "dev-develop"
+        "bshaffer/oauth2-server-php": "~1.5"
     }
 }
